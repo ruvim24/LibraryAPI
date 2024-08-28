@@ -1,4 +1,5 @@
-﻿using LibraryDataAcces.Data;
+﻿using Library.Core;
+using LibraryDataAcces.Data;
 using LibraryDataAcces.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -36,10 +37,13 @@ namespace LibraryDataAcces.Repozitories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Category>> GetCategoriesAsync()
+        public async Task<PaginatedList<Category>> GetCategoriesAsync(int page, int nr)
         {
-            var categories = await _context.Categories.ToListAsync();
-            return categories;
+            var count = _context.Categories.Count();
+            var totalPages = (int)Math.Ceiling(count / (double)nr);
+            var categories = await _context.Categories.Skip((page - 1) * nr).Take(nr).ToListAsync();
+
+            return new PaginatedList<Category>(categories, page, totalPages);
         }
 
         public async Task<Category?> GetCategoryByIdAsync(int id)

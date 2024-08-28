@@ -1,4 +1,5 @@
-﻿using LibraryDataAcces.Models;
+﻿using Library.Core;
+using LibraryDataAcces.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace LibraryDataAcces.Repozitories
 {
     public interface ICategoryRepository
     {
-        Task<List<Category>> GetCategoriesAsync();
+        Task<PaginatedList<Category>> GetCategoriesAsync(int page, int nr);
 
         Task<Category?> GetCategoryByIdAsync(int id);
 

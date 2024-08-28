@@ -1,4 +1,5 @@
-﻿using LibraryDataAcces.Data;
+﻿using Library.Core;
+using LibraryDataAcces.Data;
 using LibraryDataAcces.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,11 +18,13 @@ namespace LibraryDataAcces.Repozitories
         {
             _context = context;
         }
-        public async Task<List<Book>> GetAllBooksAsync()
+        public async Task<PaginatedList<Book>> GetAllBooksAsync(int page, int nr)
         {
-            var books = await _context.Books.ToListAsync();
+            var count = _context.Books.Count();
+            var totalPages = (int)Math.Ceiling(count / (double)nr);
+            var books = await _context.Books.Skip((page - 1) * nr).Take(nr).ToListAsync();
 
-            return books ;
+            return new PaginatedList<Book>(books, page, totalPages);
         }
 
         public async Task<Book> CreateBookAsync(Book book)
@@ -58,7 +61,7 @@ namespace LibraryDataAcces.Repozitories
             _context.SaveChanges();
         }
 
-        public async Task UpdateBookAsync(Book book)
+        public async Task<Book> UpdateBookAsync(Book book)
         {
             var returnedBook = _context.Books.FirstOrDefault(x => x.BookId == book.BookId);
             if (returnedBook == null)
@@ -71,8 +74,9 @@ namespace LibraryDataAcces.Repozitories
             returnedBook.Price = book.Price;
             
             
-            _context.Books.Update(returnedBook);
+            var updatedBook = _context.Books.Update(returnedBook);
             _context.SaveChanges();
+            return updatedBook.Entity;
         }
     }
 }

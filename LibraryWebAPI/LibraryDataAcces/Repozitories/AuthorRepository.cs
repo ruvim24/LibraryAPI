@@ -1,4 +1,5 @@
-﻿using LibraryDataAcces.Data;
+﻿using Library.Core;
+using LibraryDataAcces.Data;
 using LibraryDataAcces.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,9 +18,13 @@ namespace LibraryDataAcces.Repozitories
         {
             _context = context;
         }
-        public async Task<List<Author>> GetAuthorsAsync()
+        public async Task<PaginatedList<Author>> GetAuthorsAsync(int page, int nr)
         {
-            return  _context.Authors.ToList();
+            var count = _context.Authors.Count();
+            var totalPages = (int)Math.Ceiling(count / (double)nr);
+            var authors = await _context.Authors.Skip((page - 1) * nr).Take(nr).ToListAsync();
+
+            return new PaginatedList<Author>(authors, page, totalPages);
         }
         public async Task<Author?> GetAuthorByIdAsync(int id)
         {
@@ -38,7 +43,7 @@ namespace LibraryDataAcces.Repozitories
                 throw new Exception("Exiting author");
             }
             var createdAuhtor =  await _context.Authors.AddAsync(author);
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
             return createdAuhtor.Entity;
         }
 
