@@ -1,4 +1,5 @@
-﻿using LibraryDataAcces.Models;
+﻿using Library.Core;
+using LibraryDataAcces.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,10 @@ namespace LibraryDataAcces.Repozitories
     public interface IBookRepository
     {
         public Task<Book> CreateBookAsync(Book book);
-        public Task<List<Book>> GetAllBooksAsync();
+        public Task<PaginatedList<Book>> GetAllBooksAsync(int page, int nr);
         public Task<Book?> GetBookByIdAsync(int id);
         public Task RemoveBookAsync(int id);
-        public Task UpdateBookAsync(Book book);
+        public Task<Book> UpdateBookAsync(Book book);
         
     }
 }

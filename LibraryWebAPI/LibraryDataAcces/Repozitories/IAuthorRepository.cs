@@ -1,4 +1,5 @@
-﻿using LibraryDataAcces.Models;
+﻿using Library.Core;
+using LibraryDataAcces.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace LibraryDataAcces.Repozitories
 {
     public interface IAuthorRepository
     {
-        Task<List<Author>> GetAuthorsAsync();
+        Task<PaginatedList<Author>> GetAuthorsAsync(int page, int nr);
 
         Task<Author?> GetAuthorByIdAsync(int id);
 

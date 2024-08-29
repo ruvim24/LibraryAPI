@@ -23,6 +23,8 @@ namespace Library.Tests
             new Book(){Title = "TitleTest5", Price = 123, AuthorId = 6, BookId = 6, CategoryId = 6},
 
         };
+        private int page = 1;
+        private int pageSize = 10;
         
         [Fact]
         public async Task BookRepositoryGetAllBooks_ShouldReturnZero_IfNone()
@@ -35,8 +37,8 @@ namespace Library.Tests
             IBookRepository repo = new BookRepository(context);
 
             Assert.True(!context.Books.Any());
-            var books = await repo.GetAllBooksAsync();
-            Assert.True(books.Count == 0);
+            var books = await repo.GetAllBooksAsync(page, pageSize);
+            Assert.True(books.Items.Count == 0);
 
         }
         [Fact]
@@ -53,10 +55,10 @@ namespace Library.Tests
             var repo = new BookRepository(context);
 
             Assert.True(context.Books.Any());
-            var books = await repo.GetAllBooksAsync();
-            Assert.True(books.Any());
-            Assert.True(books.Count ==  _books.Count);
-            Assert.Equal(books, _books);
+            var books = await repo.GetAllBooksAsync(page, pageSize);
+            Assert.True(books.Items.Any());
+            Assert.True(books.Items.Count ==  _books.Count);
+            Assert.Equal(books.Items, _books);
         }
         [Fact]
         public async Task BookRepositoryCreateBook_ShouldReturnBook_IfNone() 
