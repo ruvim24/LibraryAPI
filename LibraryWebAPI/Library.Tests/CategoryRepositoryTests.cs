@@ -19,7 +19,8 @@ namespace Library.Tests
             new Category {CategoryId = 3, Name = "ThirdCategory"},
             new Category {CategoryId = 4, Name = "ForthCategory"},
         };
-
+        private int page = 1;
+        private int pageSize = 10;
 
         [Fact]
         public async Task CategoryRepositoryGetAllCategories_ShouldReturnZeroCategories_IfNone()
@@ -32,8 +33,8 @@ namespace Library.Tests
             ICategoryRepository repo = new CategoryRepository(context);
 
             Assert.True(!context.Categories.Any());
-            var categories = await repo.GetCategoriesAsync();
-            Assert.True(categories.Count == 0);
+            var categories = await repo.GetCategoriesAsync(page, pageSize);
+            Assert.True(categories.Items.Count == 0);
         }
 
         [Fact]
@@ -49,10 +50,10 @@ namespace Library.Tests
             ICategoryRepository repo = new CategoryRepository(context);
 
             Assert.True(context.Categories.Any());
-            var categories = await repo.GetCategoriesAsync();
-            Assert.True(categories.Any());
-            Assert.True(categories.Count == _categories.Count);
-            Assert.Equal(_categories, categories);
+            var categories = await repo.GetCategoriesAsync(page, pageSize);
+            Assert.True(categories.Items.Any());
+            Assert.True(categories.Items.Count == _categories.Count);
+            Assert.Equal(_categories, categories.Items);
         }
 
         [Fact]

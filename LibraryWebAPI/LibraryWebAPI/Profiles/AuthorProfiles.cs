@@ -10,9 +10,7 @@ namespace LibraryWebAPI.Profiles
         public AuthorProfiles()
         {
             CreateMap<AuthorDto, Author>().ReverseMap();
-            CreateMap<CreateAuthorDto, Author>()
-                /*.ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.AuthorName))*/
-                .ReverseMap();
+            CreateMap<CreateAuthorDto, Author>().ReverseMap();
             CreateMap<PaginatedList<Author>, PaginatedList<AuthorDto>>();
         }
     }

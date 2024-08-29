@@ -10,7 +10,7 @@ namespace LibraryWebAPI.Validations
             RuleFor(x => x.AuthorName)
                 .NotEmpty()
                 .WithMessage("Name is required")
-                /*.NotNull()*/
+                .NotNull()
                 .WithMessage("Name is required")
                 .MaximumLength(50)
                 .WithMessage("Name maximum length is 50");

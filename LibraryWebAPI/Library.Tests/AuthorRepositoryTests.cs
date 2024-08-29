@@ -21,6 +21,9 @@ namespace Library.Tests
 
 
         };
+
+        private int page = 1;
+        private int pageSize = 10;
         //Task<List<Author>> GetAuthorsAsync();
         [Fact]
         public async Task AuthorRepositoryGetAuthors_ShouldReturnAuthors_IfAny()
@@ -34,12 +37,12 @@ namespace Library.Tests
             context.Authors.AddRange(_authors);
             context.SaveChanges();
 
-            var returnedAuthors = await repo.GetAuthorsAsync();
+            var returnedAuthors = await repo.GetAuthorsAsync(page, pageSize);
 
             Assert.NotNull(returnedAuthors);
-            Assert.True(returnedAuthors.Any());
-            Assert.Equal(returnedAuthors, _authors);
-            Assert.True(returnedAuthors.Count == _authors.Count);
+            Assert.True(returnedAuthors.Items.Any());
+            Assert.Equal(returnedAuthors.Items, _authors);
+            Assert.True(returnedAuthors.Items.Count == _authors.Count);
         }
         [Fact]
         public async Task AuthorRepositoryGetAuthors_ShouldReturnZeroAuthors_IfNone()
@@ -50,15 +53,14 @@ namespace Library.Tests
             var context = new LibraryContext(options);
             var repo = new AuthorRepository(context);
 
-            var returnedAuthors = await repo.GetAuthorsAsync();
+            var returnedAuthors = await repo.GetAuthorsAsync(page, pageSize);
 
             Assert.True(!context.Authors.Any());
             Assert.NotNull(returnedAuthors);
-            Assert.True(returnedAuthors.Count == 0);
+            Assert.True(returnedAuthors.Items.Count == 0);
 
         }
 
-        //Task<Author?> GetAuthorByIdAsync(int id);
         [Fact]
         public async Task AuthorRepositoryGetAuthorsById_ShouldReturnAuthor_IfFound()
         {
@@ -90,7 +92,6 @@ namespace Library.Tests
         }
 
 
-        //Task<Author> CreateAuthorAsync(Author author);
         [Fact]
         public async Task AuthorRepositoryCreateAuthor_ShouldCreateCategory_IfNone()
         {
@@ -122,7 +123,6 @@ namespace Library.Tests
         }
 
 
-        //Task<Author> UpdateAuthorAsync(Author author);
         [Fact]
         public async Task AuthorRepositoryUpdateBook_ShouldUpdateBook_IfFound()
         {
@@ -158,11 +158,8 @@ namespace Library.Tests
             var authorToBeUpdated = new Author() { AuthorName = "test", AuthorId = 39};
             Assert.ThrowsAsync<KeyNotFoundException>(async () => await repo.UpdateAuthorAsync(authorToBeUpdated));
 
-            
-
         }
 
-        //Task DeleteAuthorAsync(int id);
 
         [Fact]
         public async Task AuthorRepositoryRemoveAuthor_ShouldRemoveAuthor_IfFound()

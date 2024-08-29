@@ -29,13 +29,6 @@ namespace LibraryWebAPI.Controllers
             _createValidator = createValidator;
         }
 
-        //    !!!
-
-        //problema cu acest controller
-        //imi pica tot api-ul din cauza acestei metode, daca o comentez restul merge bine
-        //ma gandesc ca problema e in mapare,
-        //dar la celelate controllere maparea merge bine cu PaginatedList
-
         [HttpGet]
         public async Task<PaginatedList<AuthorDto>> Get(int page, int nr)
         {
@@ -46,7 +39,7 @@ namespace LibraryWebAPI.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var author = await _authorRepository.GetAuthorByIdAsync(id);
